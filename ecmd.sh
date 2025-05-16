@@ -1,0 +1,79 @@
+#!/usr/bin/env bash
+
+ecmd() {
+    local TMP_FILE PREV_CMD EDITED_CMD CMD_TO_RUN READ_STATUS HISTFILE
+
+    cleanup() {
+        echo
+        echo
+        echo "[CLEANUP]"
+        [ "${DEBUG_MODE:-0}" -eq 1 ] && echo "[DEBUG] [$(date -u +"%Y-%m-%dT%H:%M:%SZ")]: Cleanup function called."
+        
+        [[ -n "$TMP_FILE" && -f "$TMP_FILE" ]] && rm "$TMP_FILE"
+        [ "${DEBUG_MODE:-0}" -eq 1 ] && echo "[DEBUG] [$(date -u +"%Y-%m-%dT%H:%M:%SZ")]: Cleanup of $TMP_FILE finished."
+        
+        # trap - EXIT
+        return 0
+    }
+
+    on_sigint() {
+        cleanup
+        echo
+        echo "[ON_SIGINT]"
+        [ "${DEBUG_MODE:-0}" -eq 1 ] && echo "[DEBUG] [$(date -u +"%Y-%m-%dT%H:%M:%SZ")]: SIGINT received, exiting."
+        
+        trap - SIGINT
+        return 1
+    }
+
+    trap cleanup EXIT
+    trap on_sigint SIGINT
+
+    PREV_CMD=$(fc -ln -2 -2 2>/dev/null | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+    if [ -z "$PREV_CMD" ]; then
+        HISTFILE="${HISTFILE:-$HOME/.bash_history}"
+        if [ -f "$HISTFILE" ]; then
+            PREV_CMD=$(grep -v '^\s*$' "$HISTFILE" | tail -n 1)
+        fi
+    fi
+    [ "${DEBUG_MODE:-0}" -eq 1 ] && echo "[DEBUG] [$(date -u +"%Y-%m-%dT%H:%M:%SZ")]: Previous command: $PREV_CMD"
+
+    TMP_FILE=$(mktemp "/tmp/ecmd-edited-cmd-XXXXXX")
+    echo "$PREV_CMD" > "$TMP_FILE"
+    [ "${DEBUG_MODE:-0}" -eq 1 ] && echo "[DEBUG] [$(date -u +"%Y-%m-%dT%H:%M:%SZ")]: Created temporary file: $TMP_FILE"
+
+    [ "${DEBUG_MODE:-0}" -eq 1 ] && echo "[DEBUG] [$(date -u +"%Y-%m-%dT%H:%M:%SZ")]: Opening editor: ${EDITOR:-nano}"
+    ${EDITOR:-nano} "$TMP_FILE" || { echo "Editor failed"; return 1; }
+
+    EDITED_CMD=$(<"$TMP_FILE")
+
+    echo "Press Enter to run (<CTRL + C> to cancel):"
+
+    # Save terminal state
+    STTY_ORIGINAL=$(stty -g)
+    [ "${DEBUG_MODE:-0}" -eq 1 ] && echo "[DEBUG] [$(date -u +"%Y-%m-%dT%H:%M:%SZ")]: Backup of terminal state: $STTY_ORIGINAL"
+
+    CMD_TO_RUN=$(
+        trap 'exit 130' SIGINT
+        read -e -i "$EDITED_CMD" CMD && echo "$CMD"
+    )
+    READ_STATUS=$?
+
+    # Restore terminal state
+    stty "$STTY_ORIGINAL"
+    [ "${DEBUG_MODE:-0}" -eq 1 ] && echo "[DEBUG] [$(date -u +"%Y-%m-%dT%H:%M:%SZ")]: Restored terminal state: $STTY_ORIGINAL"
+
+    if [ $READ_STATUS -ne 0 ]; then
+        [ "${DEBUG_MODE:-0}" -eq 1 ] && echo "[DEBUG] [$(date -u +"%Y-%m-%dT%H:%M:%SZ")]: Cancelled by user"
+        return $READ_STATUS
+    fi
+
+    [ "${DEBUG_MODE:-0}" -eq 1 ] && echo "[DEBUG] [$(date -u +"%Y-%m-%dT%H:%M:%SZ")]: Running command: $CMD_TO_RUN"
+    eval "$CMD_TO_RUN"
+    [ "${DEBUG_MODE:-0}" -eq 1 ] && echo "[DEBUG] [$(date -u +"%Y-%m-%dT%H:%M:%SZ")]: Command executed: $CMD_TO_RUN"
+    
+    cleanup
+
+    [ "${DEBUG_MODE:-0}" -eq 1 ] && echo "[DEBUG] [$(date -u +"%Y-%m-%dT%H:%M:%SZ")]: Resetting traps."
+    trap - EXIT SIGINT
+}
