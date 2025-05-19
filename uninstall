@@ -3,10 +3,20 @@
 USER_BIN_PATH="${HOME}/.local/bin"
 
 EXECUTABLE_FILE_NAME="ecmd"
-EXECUTABLE_PATH="${USER_BIN_PATH}/${EXECUTABLE_FILE_NAME}"
+EXECUTABLE_INSTALL_PATH="${USER_BIN_PATH}/${EXECUTABLE_FILE_NAME}"
+
+LINE_TO_REMOVE="[ -f $EXECUTABLE_INSTALL_PATH ] && source $EXECUTABLE_INSTALL_PATH"
 
 # Remove user's executable
-if [[ -f $EXECUTABLE_PATH ]]; then
-    echo "Removing local executable: $EXECUTABLE_PATH"
-    rm "$EXECUTABLE_PATH"
+if [[ -f $EXECUTABLE_INSTALL_PATH ]]; then
+    echo "Removing local executable: $EXECUTABLE_INSTALL_PATH"
+    rm "$EXECUTABLE_INSTALL_PATH"
+fi
+
+# Remove line from .bashrc
+if [[ -f ~/.bashrc ]]; then
+    echo "Removing line '$LINE_TO_REMOVE' from .bashrc"
+grep -vF "$LINE_TO_REMOVE" ~/.bashrc > ~/.bashrc.tmp && mv ~/.bashrc.tmp ~/.bashrc
+else
+    echo "WARN: ~/.bashrc not found. Skipping removal of line '$LINE_TO_REMOVE'."
 fi

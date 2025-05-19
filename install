@@ -13,6 +13,8 @@ EXECUTABLE_FILE_NAME="ecmd"
 EXECUTABLE_SOURCE_PATH=$(get_abs_filename "${INSTALL_SCRIPT_DIR}/${EXECUTABLE_FILE_NAME}")
 EXECUTABLE_INSTALL_PATH="${USER_BIN_PATH}/${EXECUTABLE_FILE_NAME}"
 
+LINE_TO_WRITE="[ -f $EXECUTABLE_INSTALL_PATH ] && source $EXECUTABLE_INSTALL_PATH"
+
 # Check bin dir
 if [ ! -d "$USER_BIN_PATH" ]; then
     echo "Creating $USER_BIN_PATH directory..."
@@ -45,14 +47,14 @@ fi
 
 if [[ "$USER_ANS" =~ ^[Yy]$ ]]; then
     echo
-    echo "Adding line to .bashrc..."
+    echo "Adding line to .bashrc"
     if ! grep -q "$EXECUTABLE_INSTALL_PATH" ~/.bashrc; then
-        echo "[ -f $EXECUTABLE_INSTALL_PATH ] && source $EXECUTABLE_INSTALL_PATH" >> ~/.bashrc
-        echo "Line added to .bashrc."
+        echo "$LINE_TO_WRITE" >> ~/.bashrc
+        echo "Line added to .bashrc"
     else
-        echo "Line already exists in .bashrc."
+        echo "Line already exists in .bashrc"
     fi
 else
     echo
-    echo "Skipping adding line to .bashrc."
+    echo "Skipping adding line to .bashrc"
 fi
