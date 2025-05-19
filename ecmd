@@ -4,7 +4,7 @@ ecmd() {
     local TMP_FILE PREV_CMD EDITED_CMD CMD_TO_RUN READ_STATUS HISTFILE
 
     cleanup() {
-        echo
+        [ "${DEBUG_MODE:-0}" -eq 1 ] && echo
         [ "${DEBUG_MODE:-0}" -eq 1 ] && echo "[CLEANUP]"
         [ "${DEBUG_MODE:-0}" -eq 1 ] && echo "[DEBUG] [$(date -u +"%Y-%m-%dT%H:%M:%SZ")]: Cleanup function called."
         
@@ -17,7 +17,7 @@ ecmd() {
 
     on_sigint() {
         cleanup
-        echo
+        [ "${DEBUG_MODE:-0}" -eq 1 ] && echo
         [ "${DEBUG_MODE:-0}" -eq 1 ] && echo "[ON_SIGINT]"
         [ "${DEBUG_MODE:-0}" -eq 1 ] && echo "[DEBUG] [$(date -u +"%Y-%m-%dT%H:%M:%SZ")]: SIGINT received, exiting."
         
@@ -28,13 +28,25 @@ ecmd() {
     trap cleanup EXIT
     trap on_sigint SIGINT
 
-    PREV_CMD=$(fc -ln -2 -2 2>/dev/null | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+    CMD_INPUT="$*"
+    [ "${DEBUG_MODE:-0}" -eq 1 ] && echo "[DEBUG] [$(date -u +"%Y-%m-%dT%H:%M:%SZ")]: Command input: '$CMD_INPUT'"
+    [ "${DEBUG_MODE:-0}" -eq 1 ] && echo "[DEBUG] [$(date -u +"%Y-%m-%dT%H:%M:%SZ")]: Command input length: ${#CMD_INPUT}"
+
+    if [ -n "$CMD_INPUT" ]; then
+        PREV_CMD="$CMD_INPUT"
+    else
+        # Get the last command from history
+        PREV_CMD=$(fc -ln -2 -2 2>/dev/null | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+    fi
+
+    # PREV_CMD=$(fc -ln -2 -2 2>/dev/null | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
     # if [ -z "$PREV_CMD" ]; then
     #     HISTFILE="${HISTFILE:-$HOME/.bash_history}"
     #     if [ -f "$HISTFILE" ]; then
     #         PREV_CMD=$(grep -v '^\s*$' "$HISTFILE" | tail -n 1)
     #     fi
     # fi
+
     [ "${DEBUG_MODE:-0}" -eq 1 ] && echo "[DEBUG] [$(date -u +"%Y-%m-%dT%H:%M:%SZ")]: Previous command: $PREV_CMD"
 
     TMP_FILE=$(mktemp "/tmp/ecmd-edited-cmd-XXXXXX")

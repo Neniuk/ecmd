@@ -32,3 +32,27 @@ fi
 if [[ ":$PATH:" != *":$USER_BIN_PATH:"* ]]; then
     echo "WARNING: $USER_BIN_PATH is not in your PATH. Remember to add it to your PATH."
 fi
+
+# Ask the user if the line for sourcing the script should be appended to .bashrc
+trap 'exit 130' SIGINT
+read -r -p "Do you want to add the line '[ -f $EXECUTABLE_INSTALL_PATH ] && source $EXECUTABLE_INSTALL_PATH' to your .bashrc? [y/N] " USER_ANS
+READ_STATUS=$?
+
+if [[ $READ_STATUS -ne 0 ]]; then
+    echo "User input interrupted. Exiting."
+    exit 1
+fi
+
+if [[ "$USER_ANS" =~ ^[Yy]$ ]]; then
+    echo
+    echo "Adding line to .bashrc..."
+    if ! grep -q "$EXECUTABLE_INSTALL_PATH" ~/.bashrc; then
+        echo "[ -f $EXECUTABLE_INSTALL_PATH ] && source $EXECUTABLE_INSTALL_PATH" >> ~/.bashrc
+        echo "Line added to .bashrc."
+    else
+        echo "Line already exists in .bashrc."
+    fi
+else
+    echo
+    echo "Skipping adding line to .bashrc."
+fi
