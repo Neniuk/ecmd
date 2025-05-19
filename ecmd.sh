@@ -5,8 +5,7 @@ ecmd() {
 
     cleanup() {
         echo
-        echo
-        echo "[CLEANUP]"
+        [ "${DEBUG_MODE:-0}" -eq 1 ] && echo "[CLEANUP]"
         [ "${DEBUG_MODE:-0}" -eq 1 ] && echo "[DEBUG] [$(date -u +"%Y-%m-%dT%H:%M:%SZ")]: Cleanup function called."
         
         [[ -n "$TMP_FILE" && -f "$TMP_FILE" ]] && rm "$TMP_FILE"
@@ -19,7 +18,7 @@ ecmd() {
     on_sigint() {
         cleanup
         echo
-        echo "[ON_SIGINT]"
+        [ "${DEBUG_MODE:-0}" -eq 1 ] && echo "[ON_SIGINT]"
         [ "${DEBUG_MODE:-0}" -eq 1 ] && echo "[DEBUG] [$(date -u +"%Y-%m-%dT%H:%M:%SZ")]: SIGINT received, exiting."
         
         trap - SIGINT
