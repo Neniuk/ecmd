@@ -29,12 +29,12 @@ ecmd() {
     trap on_sigint SIGINT
 
     PREV_CMD=$(fc -ln -2 -2 2>/dev/null | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
-    if [ -z "$PREV_CMD" ]; then
-        HISTFILE="${HISTFILE:-$HOME/.bash_history}"
-        if [ -f "$HISTFILE" ]; then
-            PREV_CMD=$(grep -v '^\s*$' "$HISTFILE" | tail -n 1)
-        fi
-    fi
+    # if [ -z "$PREV_CMD" ]; then
+    #     HISTFILE="${HISTFILE:-$HOME/.bash_history}"
+    #     if [ -f "$HISTFILE" ]; then
+    #         PREV_CMD=$(grep -v '^\s*$' "$HISTFILE" | tail -n 1)
+    #     fi
+    # fi
     [ "${DEBUG_MODE:-0}" -eq 1 ] && echo "[DEBUG] [$(date -u +"%Y-%m-%dT%H:%M:%SZ")]: Previous command: $PREV_CMD"
 
     TMP_FILE=$(mktemp "/tmp/ecmd-edited-cmd-XXXXXX")
