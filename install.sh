@@ -11,7 +11,7 @@ INSTALL_SCRIPT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 EXECUTABLE_FILE_NAME="ecmd"
 
 EXECUTABLE_SOURCE_PATH=$(get_abs_filename "${INSTALL_SCRIPT_DIR}/${EXECUTABLE_FILE_NAME}")
-EXECUTABLE_INSTALL_PATH="${USER_BIN}/${EXECUTABLE_FILE_NAME}"
+EXECUTABLE_INSTALL_PATH="${USER_BIN_PATH}/${EXECUTABLE_FILE_NAME}"
 
 # Check bin dir
 if [ ! -d "$USER_BIN_PATH" ]; then
@@ -29,6 +29,6 @@ elif [[ -f $EXECUTABLE_INSTALL_PATH ]]; then
 fi
 
 # Check if user bin dir is in PATH, if not, warn the user
-if [[ ":$PATH:" != *":$USER_BIN:"* ]]; then
-    echo "WARNING: $USER_BIN is not in your PATH. Remember to add it to your PATH."
+if [[ ":$PATH:" != *":$USER_BIN_PATH:"* ]]; then
+    echo "WARNING: $USER_BIN_PATH is not in your PATH. Remember to add it to your PATH."
 fi

@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-USER_BIN="${HOME}/.local/bin"
+USER_BIN_PATH="${HOME}/.local/bin"
 
 EXECUTABLE_FILE_NAME="ecmd"
-EXECUTABLE_PATH="${USER_BIN}/${EXECUTABLE_FILE_NAME}"
+EXECUTABLE_PATH="${USER_BIN_PATH}/${EXECUTABLE_FILE_NAME}"
 
 # Remove user's executable
 if [[ -f $EXECUTABLE_PATH ]]; then
