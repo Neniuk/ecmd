@@ -2,7 +2,7 @@
 
 USER_BIN_PATH="${HOME}/.local/bin"
 
-EXECUTABLE_FILE_NAME="ecmd"
+EXECUTABLE_FILE_NAME="ecmd.sh"
 EXECUTABLE_PATH="${USER_BIN_PATH}/${EXECUTABLE_FILE_NAME}"
 
 # Remove user's executable
