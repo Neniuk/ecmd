@@ -2,21 +2,35 @@
 
 USER_BIN_PATH="${HOME}/.local/bin"
 
+
+CONFIG_FILE_NAME="ecmd.conf"
+CONFIG_FILE_INSTALL_PATH="${XDG_CONFIG_HOME:-$HOME/.config}/${CONFIG_FILE_NAME}"
+
 EXECUTABLE_FILE_NAME="ecmd"
 EXECUTABLE_INSTALL_PATH="${USER_BIN_PATH}/${EXECUTABLE_FILE_NAME}"
 
 LINE_TO_REMOVE="[ -f $EXECUTABLE_INSTALL_PATH ] && source $EXECUTABLE_INSTALL_PATH"
 
+# Remove config file
+if [[ -f $CONFIG_FILE_INSTALL_PATH ]]; then
+    echo "Removing config file: $CONFIG_FILE_INSTALL_PATH"
+    rm "$CONFIG_FILE_INSTALL_PATH"
+else
+    echo "WARN: $CONFIG_FILE_INSTALL_PATH not found. Skipping removal."
+fi
+
 # Remove user's executable
 if [[ -f $EXECUTABLE_INSTALL_PATH ]]; then
     echo "Removing local executable: $EXECUTABLE_INSTALL_PATH"
     rm "$EXECUTABLE_INSTALL_PATH"
+else
+    echo "WARN: $EXECUTABLE_INSTALL_PATH not found. Skipping removal."
 fi
 
 # Remove line from .bashrc
 if [[ -f ~/.bashrc ]]; then
     echo "Removing line '$LINE_TO_REMOVE' from .bashrc"
-grep -vF "$LINE_TO_REMOVE" ~/.bashrc > ~/.bashrc.tmp && mv ~/.bashrc.tmp ~/.bashrc
+    grep -vF "$LINE_TO_REMOVE" ~/.bashrc > ~/.bashrc.tmp && mv ~/.bashrc.tmp ~/.bashrc
 else
     echo "WARN: ~/.bashrc not found. Skipping removal of line '$LINE_TO_REMOVE'."
 fi

@@ -8,12 +8,31 @@ get_abs_filename() {
 USER_BIN_PATH="${HOME}/.local/bin"
 
 INSTALL_SCRIPT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-EXECUTABLE_FILE_NAME="ecmd"
 
+EXECUTABLE_FILE_NAME="ecmd"
 EXECUTABLE_SOURCE_PATH=$(get_abs_filename "${INSTALL_SCRIPT_DIR}/${EXECUTABLE_FILE_NAME}")
 EXECUTABLE_INSTALL_PATH="${USER_BIN_PATH}/${EXECUTABLE_FILE_NAME}"
 
+CONFIG_FILE_NAME="ecmd.conf"
+CONFIG_DEFAULT_FILE_NAME="ecmd.default.conf"
+CONFIG_FILE_SOURCE_PATH=$(get_abs_filename "${INSTALL_SCRIPT_DIR}/${CONFIG_DEFAULT_FILE_NAME}")
+CONFIG_FILE_INSTALL_PATH="${XDG_CONFIG_HOME:-$HOME/.config}/${CONFIG_FILE_NAME}"
+
 LINE_TO_WRITE="[ -f $EXECUTABLE_INSTALL_PATH ] && source $EXECUTABLE_INSTALL_PATH"
+
+# Check config dir
+if [ ! -d "${XDG_CONFIG_HOME:-$HOME/.config}" ]; then
+    echo "Creating config directory..."
+    mkdir -p "${XDG_CONFIG_HOME:-$HOME/.config}"
+fi
+
+# Copy to config dir
+if [[ ! -f $CONFIG_FILE_INSTALL_PATH ]]; then
+    echo "Installing $CONFIG_FILE_NAME to $CONFIG_FILE_INSTALL_PATH"
+    cp "$CONFIG_FILE_SOURCE_PATH" "$CONFIG_FILE_INSTALL_PATH"
+else
+    echo "WARN: $CONFIG_FILE_INSTALL_PATH already exists. Not overwriting."
+fi
 
 # Check bin dir
 if [ ! -d "$USER_BIN_PATH" ]; then
@@ -21,7 +40,7 @@ if [ ! -d "$USER_BIN_PATH" ]; then
     mkdir -p "$USER_BIN_PATH"
 fi
 
-# COpy to user bin dir
+# Copy to user bin dir
 if [[ ! -f $EXECUTABLE_INSTALL_PATH ]]; then
     echo "Installing $EXECUTABLE_FILE_NAME to $EXECUTABLE_INSTALL_PATH"
     cp "$EXECUTABLE_SOURCE_PATH" "$EXECUTABLE_INSTALL_PATH"

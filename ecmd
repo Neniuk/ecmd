@@ -28,6 +28,15 @@ ecmd() {
     trap cleanup EXIT
     trap on_sigint SIGINT
 
+    CONFIG_FILE="${XDG_CONFIG_HOME:-$HOME/.config}/ecmd.conf"
+    if [ -f "$CONFIG_FILE" ]; then
+        source "$CONFIG_FILE"
+        [ "${DEBUG_MODE:-0}" -eq 1 ] && echo "[DEBUG] [$(date -u +"%Y-%m-%dT%H:%M:%SZ")]: Loaded configuration from $CONFIG_FILE"
+        [ "${DEBUG_MODE:-0}" -eq 1 ] && echo "[DEBUG] [$(date -u +"%Y-%m-%dT%H:%M:%SZ")]: EDITOR set to ${EDITOR:-nano}"
+    else
+        [ "${DEBUG_MODE:-0}" -eq 1 ] && echo "[DEBUG] [$(date -u +"%Y-%m-%dT%H:%M:%SZ")]: Configuration file $CONFIG_FILE not found"
+    fi
+
     CMD_INPUT="$*"
     [ "${DEBUG_MODE:-0}" -eq 1 ] && echo "[DEBUG] [$(date -u +"%Y-%m-%dT%H:%M:%SZ")]: Command input: '$CMD_INPUT'"
     [ "${DEBUG_MODE:-0}" -eq 1 ] && echo "[DEBUG] [$(date -u +"%Y-%m-%dT%H:%M:%SZ")]: Command input length: ${#CMD_INPUT}"
