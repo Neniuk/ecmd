@@ -62,6 +62,7 @@ ecmd() {
     echo "$PREV_CMD" > "$TMP_FILE"
     [ "${DEBUG_MODE:-0}" -eq 1 ] && echo "[DEBUG] [$(date -u +"%Y-%m-%dT%H:%M:%SZ")]: Created temporary file: $TMP_FILE"
 
+    # TODO: Double check which editor to fall back to if $EDITOR is not set
     [ "${DEBUG_MODE:-0}" -eq 1 ] && echo "[DEBUG] [$(date -u +"%Y-%m-%dT%H:%M:%SZ")]: Opening editor: ${EDITOR:-nano}"
     ${EDITOR:-nano} "$TMP_FILE" || { echo "Editor failed"; return 1; }
 

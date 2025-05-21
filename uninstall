@@ -11,6 +11,7 @@ EXECUTABLE_INSTALL_PATH="${USER_BIN_PATH}/${EXECUTABLE_FILE_NAME}"
 
 LINE_TO_REMOVE="[ -f $EXECUTABLE_INSTALL_PATH ] && source $EXECUTABLE_INSTALL_PATH"
 
+# TODO: Ask user if they want to keep config file during uninstall
 # Remove config file
 if [[ -f $CONFIG_FILE_INSTALL_PATH ]]; then
     echo "Removing config file: $CONFIG_FILE_INSTALL_PATH"
