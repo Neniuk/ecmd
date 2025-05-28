@@ -49,9 +49,9 @@ $ DEBUG_MODE=1 ecmd
 [DEBUG] [2025-05-19THH:MM:SSZ]: Created temporary file: /tmp/ecmd-edited-cmd-XXXXXX
 [DEBUG] [2025-05-19THH:MM:SSZ]: Opening editor: nano
 Press Enter to run (<CTRL + C> to cancel):
-[DEBUG] [2025-05-19THH:MM:SSZ]: Backup of terminal state: XXXX:X:XX:XXXX:X:XX:XX:XX:X:X:X:X:XX:XX:XX:X:XX:X:XX:XX:X:X:X:X:X:X:X:X:X:X:X:X:X:X:X:X
+[DEBUG] [2025-05-19THH:MM:SSZ]: Backup of terminal state: XXXX:X:XX:XXXX:X:XX:XX:XX:X...
 echo wow amazing
-[DEBUG] [2025-05-19THH:MM:SSZ]: Restored terminal state: XXXX:X:XX:XXXX:X:XX:XX:XX:X:X:X:X:XX:XX:XX:X:XX:X:XX:XX:X:X:X:X:X:X:X:X:X:X:X:X:X:X:X:X
+[DEBUG] [2025-05-19THH:MM:SSZ]: Restored terminal state: XXXX:X:XX:XXXX:X:XX:XX:XX:X...
 [DEBUG] [2025-05-19THH:MM:SSZ]: Running command: echo wow amazing
 wow amazing
 [DEBUG] [2025-05-19THH:MM:SSZ]: Command executed: echo wow amazing
