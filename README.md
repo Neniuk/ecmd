@@ -1,6 +1,6 @@
 # ecmd
 
-Edit Command, or "`ecmd`", is a tool to edit commands in your editor of choice (defined in `$EDITOR`, defaults to `nano`) without needing to copy and paste. You can edit and rerun the command previously ran, or pass in a command as input to edit.
+Edit Command, or "`ecmd`", is a tool to edit commands in your editor of choice (defined in `~/.config/ecmd.conf`, defaults to `neovim`) without needing to copy and paste. You can edit and rerun the command previously ran, or pass in a command as input to edit.
 
 
 ## Installation
