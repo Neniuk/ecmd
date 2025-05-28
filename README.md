@@ -20,7 +20,7 @@ wow
 $ ecmd
 ###### EDITOR OPENS HERE ###### 
 Press Enter to run (<CTRL + C> to cancel):
-echo wow amazing        # Here you can see the edited command once you save and quit the editor
+echo wow amazing        # Here you can see the edited command once you save & quit the editor
 wow amazing             # Command is run
 ```
 
@@ -32,7 +32,7 @@ wow
 $ ecmd ls
 ###### EDITOR OPENS HERE ###### 
 Press Enter to run (<CTRL + C> to cancel):
-ls ../                  # Here you can see the edited command once you save and quit the editor
+ls ../                  # Here you can see the edited command once you save & quit the editor
 folder-1 folder-2       # Command is run
 ```
 
